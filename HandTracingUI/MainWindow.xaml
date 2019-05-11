@@ -1,0 +1,217 @@
+﻿<Window x:Class="HandTracingUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HandTracingUI"
+        xmlns:virtualCollection="clr-namespace:HandTracingUI.VirtualCollection"
+        xmlns:Gauge="clr-namespace:com.bg1qqc.MyControls.Gauge;assembly=MyControls" 
+        xmlns:ProgressBar="clr-namespace:com.bg1qqc.MyControls.ProgressBar;assembly=MyControls"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+        mc:Ignorable="d"
+        Topmost = "True"
+        Left = "0.0"
+        Top = "0.0"
+        
+        Title="多模态融合的人机交互系统" Height="360" Width="620" Loaded="Window_Loaded" KeyDown="Window_KeyDown">
+    <!-- WindowState = "Normal"
+        WindowStyle = "None"
+        ResizeMode = "NoResize" 
+    -->
+    <Grid>
+        <Viewbox Stretch="Fill">
+            <!-- 内部控件随窗体变化而变化 -->
+            <Canvas
+            Name="LayoutRoot" Height="480" Width="720">
+
+                <!-- welcome canvas -->
+                <Canvas Name="welcome_canvas"
+                    Background="#000"
+                    Visibility="Hidden"
+                    Width="{Binding Path=ActualWidth,ElementName=LayoutRoot}"
+                    Height="{Binding Path=ActualHeight,ElementName=LayoutRoot}">
+                    <Image
+                        Name="welcomeInfo" Height="280" Width="500" Canvas.Left="110" Canvas.Top="100"
+                        HorizontalAlignment ="Stretch"
+                        VerticalAlignment="Stretch">
+                    </Image>
+
+                </Canvas>
+
+                <!-- entry canvas Background="#FF5B5B5B"-->
+                <Canvas Name="entry_canvas"
+                    Background="#000"
+                    Width="{Binding Path=ActualWidth,ElementName=LayoutRoot}"
+                    Height="{Binding Path=ActualHeight,ElementName=LayoutRoot}">
+                    <Canvas
+                        Background="White"
+                        Height="480"
+                        Width="1" Canvas.Left="170"/>
+                    <ProgressBar:EllipseProgressBar 
+                        x:Name="entery_neike_epb"      
+                        ProgressColor="Lime" 
+                        ProgressValueSize="55" 
+                        Canvas.Left="214" Canvas.Top="167" Height="114" Width="98" ProgressValueColor="Transparent" 
+                        Background="#20FFFFFF" Cursor="Hand" />
+                    <Image
+                        Name="entery_neike_img"
+                        Height="51" Width="73" Canvas.Left="228" Canvas.Top="197" Cursor="Hand" MouseEnter="entery_neike_img_MouseEnter" MouseLeave="entery_neike_img_MouseLeave" 
+                        >
+                    </Image>
+
+                    <ProgressBar:EllipseProgressBar 
+                        x:Name="entery_waike_epb"      
+                        ProgressColor="Lime" 
+                        ProgressValueSize="55" 
+                        Canvas.Left="370" Canvas.Top="170" Height="109" Width="95" ProgressValueColor="Transparent" 
+                        Background="#20FFFFFF" Cursor="Hand" />
+                    <Image
+                        Name="entery_waike_img"
+                        Height="50" Width="62" Canvas.Left="385" Canvas.Top="198" Cursor="Hand" MouseEnter="entery_waike_img_MouseEnter" MouseLeave="entery_waike_img_MouseLeave" 
+                        >
+                    </Image>
+
+                    <ProgressBar:EllipseProgressBar 
+                        x:Name="entery_pifuke_epb"      
+                        ProgressColor="Lime" 
+                        ProgressValueSize="55" 
+                        Canvas.Left="512" Canvas.Top="166" Height="117" Width="100" ProgressValueColor="Transparent" 
+                        Background="#20FFFFFF" Cursor="Hand" />
+                    <Image
+                        Name="entery_pifuke_img"
+                        Height="46" Width="66" Canvas.Left="530" Canvas.Top="198" Cursor="Hand" MouseEnter="entery_pifuke_img_MouseEnter" MouseLeave="entery_pifuke_img_MouseLeave" 
+                        >
+                    </Image>
+                    <Label x:Name="label2" Content="科  室" Canvas.Left="48" Canvas.Top="213" Foreground="White" FontSize="25"/>
+                </Canvas>
+
+                <!-- patientInDepart canvas Background="#FF5B5B5B<Canvas.Background>
+                            <ImageBrush ImageSource="images/cosmosglass.png"/>
+                        </Canvas.Background>
+-->
+                <Canvas Name="patientInDepart_canvas"
+                    Background="#000"
+                        Visibility="Hidden"
+                    Width="{Binding Path=ActualWidth,ElementName=LayoutRoot}"
+                    Height="{Binding Path=ActualHeight,ElementName=LayoutRoot}">
+                    <Canvas Width="146" 
+                           
+                            Background="Black"
+                            Height="{Binding Path=ActualHeight,ElementName=LayoutRoot}">
+                        <Label x:Name="label1" Content="患者姓名" Canvas.Left="42" Canvas.Top="3" Foreground="#DDFFFFFF"/>
+                        <Label x:Name="label1_Copy" Content="患者信息" Canvas.Left="171" Canvas.Top="3" Foreground="#DDFFFFFF"/>
+
+                    </Canvas>
+                    <Canvas Width="1"
+                            Background="White"
+                            Height="{Binding Path=ActualHeight,ElementName=LayoutRoot}" Canvas.Left="146"/>
+                    <Canvas Width="574"
+                            Background="White"
+                            Height="1" Canvas.Left="146" Canvas.Top="367"/>
+
+                    <Canvas Width="1440"
+                            Background="White"
+                            Height="1" Canvas.Top="30"/>
+                    <Image x:Name="patientPortrait_img_PIDcanvas" Height="175" Canvas.Left="564" Canvas.Top="38" Width="116"/>
+                    <ListBox x:Name="patients_lb_PIDcanvas" Height="404" Canvas.Left="15" Canvas.Top="38" Width="120" ScrollViewer.VerticalScrollBarVisibility="Hidden" >
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <virtualCollection:VirtualizingWrapPanel ItemHeight="60" ItemWidth="80" Width="80" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                    <ListBox x:Name="patientsOrgan_lb_PIDcanvas" Height="80" Canvas.Left="162" Canvas.Top="382" Width="286" HorizontalAlignment="Left" >
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+
+                                <WrapPanel Orientation="Horizontal" IsItemsHost="True"/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                    <!--  <virtualCollection:VirtualizingWrapPanel ItemHeight="80" ItemWidth="80" Width="80"  /> -->
+                    <TextBlock x:Name="patientInfo_tb_PIDcanvas" Canvas.Left="183" Text=" " Canvas.Top="105" FontFamily="Microsoft YaHei" FontWeight="Normal" FontSize="18" TextWrapping="Wrap"/>
+                    <TextBlock Canvas.Left="183" TextWrapping="Wrap" Text="简介" Canvas.Top="38" FontFamily="Microsoft YaHei" FontWeight="Bold" FontSize="24" Foreground="#DDFFFFFF"/>
+                    <TextBlock x:Name="tb_bingli" Canvas.Left="183" TextWrapping="Wrap" Text="病历：" Canvas.Top="206" FontFamily="Microsoft YaHei" FontWeight="Bold" FontSize="14" Foreground="#DDFFFFFF" Height="156" Width="484"/>
+
+                </Canvas>
+
+                <!-- specificOrganImageGroup canvas -->
+                <Canvas Name="specificOrganImageGroup_canvas"
+                    Background="#000"
+Visibility="Hidden"
+                    Width="{Binding Path=ActualWidth,ElementName=LayoutRoot}"
+                    Height="{Binding Path=ActualHeight,ElementName=LayoutRoot}">
+                    <Canvas Name="imageGroupInSOIG_canvas"
+                        Background="#000"
+                        Width="{Binding Path=ActualWidth,ElementName=LayoutRoot}"
+                        Height="{Binding Path=ActualHeight,ElementName=LayoutRoot}" MouseDown="imageGroupInSOIG_canvas_MouseDown">
+
+                    </Canvas>
+                    <Label x:Name="diNzhang_SOIG" Content="第0张/共0张" Canvas.Left="291" Canvas.Top="16" FontSize="24" Foreground="White"/>
+
+                </Canvas>
+
+                <!-- specificOrganImage canvas -->
+                <Canvas Name="specificOrganImage_canvas"
+                    Background="#000"
+                    Visibility="Hidden"
+                    Width="{Binding Path=ActualWidth,ElementName=LayoutRoot}"
+                    Height="{Binding Path=ActualHeight,ElementName=LayoutRoot}">
+                    <Grid Name="imgGird" ClipToBounds="True" Background="Transparent" Width="{Binding Path=ActualWidth,ElementName=LayoutRoot}" Height="{Binding Path=ActualHeight,ElementName=LayoutRoot}">
+                        <Image Name="specificOrganImage_img_SOIcanvas" VerticalAlignment="Center">
+                            <Image.Effect>
+                                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" Opacity="0.5" />
+                            </Image.Effect>
+                        </Image>
+                    </Grid>
+                </Canvas>
+
+                <!-- 非手势进入的界面 -->
+                <Canvas Name="justOnePatient_canvas"
+                    Background="#000"
+                    Visibility="Hidden"
+                    Width="{Binding Path=ActualWidth,ElementName=LayoutRoot}"
+                    Height="{Binding Path=ActualHeight,ElementName=LayoutRoot}">
+                    <TextBlock Canvas.Left="45" TextWrapping="Wrap" Text="简介" Canvas.Top="33" FontFamily="Microsoft YaHei" FontWeight="Bold" FontSize="24"/>
+                    <TextBlock x:Name="patientInfo_tb_JOPcanvas" Canvas.Left="45" Text=" " Canvas.Top="91" FontFamily="Microsoft YaHei" FontWeight="Normal" FontSize="18" TextWrapping="Wrap" Width="36"/>
+                    <Image x:Name="patientPortrait_img_JOPcanvas" Height="174" Canvas.Left="555" Canvas.Top="38" Width="125"/>
+
+                    <ListBox x:Name="patientsOrgan_lb_JOPcanvas" Height="80" Canvas.Left="57" Canvas.Top="362" Width="400" HorizontalAlignment="Left" >
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <virtualCollection:VirtualizingWrapPanel ItemHeight="80" ItemWidth="80" Width="80" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                </Canvas>
+
+                <!-- 语音输入框(必须在所有图层的最后面，才能保证语音输入框有焦点) -->
+                <Label x:Name="input_lb" Content="" Canvas.Left="630" Canvas.Top="443" Width="80"/>
+                <TextBox x:Name="input_tb" Width="78" Canvas.Left="630" TextWrapping="Wrap" Canvas.Top="444" RenderTransformOrigin="2.04,-1" TextChanged="input_tb_TextChanged" Foreground="#FFEA2727" Background="{x:Null}" />
+                <Label x:Name="label" Content="语音操作" Canvas.Left="549" Canvas.Top="443" Foreground="White"/>
+            </Canvas>
+
+
+        </Viewbox>
+
+    </Grid>
+</Window>
